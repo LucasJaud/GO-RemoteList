@@ -1,4 +1,3 @@
-module github.com/LucasJaud/GO-RemoteList 
+module project-RPA
 
-go 1.21
-
+go 1.24.4

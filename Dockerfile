@@ -1,18 +1,23 @@
-# === etapa de build ===
-FROM golang:1.21 AS builder
+# Use a imagem base oficial do Go
+FROM golang:1.21-alpine
+
+# Defina o diretório de trabalho
 WORKDIR /app
 
-# copia go.mod e go.sum primeiro (cache eficaz)
-COPY go.mod ./
+# Copie os arquivos go.mod e go.sum (se existirem)
+COPY go.mod go.sum ./
+
+# Baixe as dependências
 RUN go mod download
 
-# copia o restante do código
+# Copie o código fonte
 COPY . .
-RUN go build -o app
 
-# === etapa de runtime enxuta ===
-FROM debian:bookworm-slim
-WORKDIR /app
-COPY --from=builder /app/app .
+# Compile a aplicação
+RUN go build -o main .
+
+# Exponha a porta (se for uma aplicação web)
 EXPOSE 8080
-CMD ["./app"]
+
+# Execute a aplicação
+CMD ["./main"]
