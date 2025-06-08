@@ -21,6 +21,8 @@ func (rl *RemoteLists) Append(name string,val int, reply *bool) error {
 		*reply = false
         return errors.New("invalid name")
     }
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
 	
 	list, ok := rl.lists[name]
 	if !ok {
