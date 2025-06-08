@@ -41,6 +41,10 @@ func (rl *RemoteLists) Append(name string,val int, reply *bool) error {
 }
 
 func (rl *RemoteLists) Get(name string,pos int, reply *int) error {
+	if name == "" {
+    *reply = 0 
+    return errors.New("invalid name")
+}
 	rl.mu.RLock()
 	defer rl.mu.RUnlock()
 
@@ -59,6 +63,10 @@ func (rl *RemoteLists) Get(name string,pos int, reply *int) error {
 }
 
 func (rl *RemoteLists) Remove(name string,reply *int) error{
+	if name == "" {
+    *reply = 0
+    return errors.New("invalid name")
+}
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
@@ -103,11 +111,7 @@ func (rl *RemoteLists) ListExists(name string,reply *bool) error{
     defer rl.mu.RUnlock()
 
 	_, ok := rl.lists[name]
-	if !ok{
-		*reply = false
-		return errors.New("list not found")
-	}
-	*reply = true
+	*reply = ok
 	return nil
 }
 
