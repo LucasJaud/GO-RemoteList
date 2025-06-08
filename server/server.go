@@ -56,12 +56,12 @@ func (s *RemoteListsService) Get(args GetArgs, reply *int) error{
 }
 
 func (s *RemoteListsService) Remove(args RemoveArgs,reply *int) error{
-	fmt.Printf("[List] Remove: name=%s")
+	fmt.Printf("[List] Remove: name=%s", args.Name)
 	return s.lists.Remove(args.Name, reply)
 }
 
 func (s *RemoteListsService) Size(args SizeArgs, reply *int) error {
-	fmt.Printf("[List] Size: name=%s")
+	fmt.Printf("[List] Size: name=%s",args.Name)
 	return s.lists.Size(args.Name, reply)
 }
 
