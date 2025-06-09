@@ -48,12 +48,13 @@ func (rl *RemoteLists) Get(name string,pos int, reply *int) error {
 	rl.mu.RLock()
 	defer rl.mu.RUnlock()
 
-	if rl.lists[name] == nil{
+	list, ok := rl.lists[name]
+	if !ok{
 		*reply = 0
-		return errors.New("list dont exist ")
+		return errors.New("list not found")
 	}
 
-	val, err := rl.lists[name].Get(pos)
+	val, err := list.Get(pos)
 	if err != nil{
 		*reply =0
 		return  err
@@ -115,9 +116,17 @@ func (rl *RemoteLists) ListExists(name string,reply *bool) error{
 	return nil
 }
 
-func (rl *RemoteLists) GetListsNames() error {
-	return nil
+func (rl *RemoteLists) GetListsNames(reply *[]string) error {
+    rl.mu.RLock()
+    defer rl.mu.RUnlock()
+    
+    names := make([]string, 0, len(rl.lists))
+    for name := range rl.lists {
+        names = append(names, name)
+    }
+    
+    *reply = names
+    return nil
 }
-
 
 
