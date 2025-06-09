@@ -78,7 +78,7 @@ func (s *RemoteListsService) Append(args AppendArgs, reply *bool) error{
 		*reply = false
 		return fmt.Errorf("failed to append to list '%s': %w", args.Name, err)
 	}
-	s.LogSuccess("Append", args.Name, fmt.Sprintf("value=%d", args.Val))
+	s.LogSuccess("Append", args.Name, fmt.Sprintf("value=%d\n", args.Val))
 	return nil
 }
 
@@ -92,7 +92,7 @@ func (s *RemoteListsService) Get(args GetArgs, reply *int) error{
 		*reply = 0
 		return fmt.Errorf("failed to get from list '%s' at position %d: %w", args.Name, args.Pos, err)
 	}
-	s.LogSuccess("Get", args.Name, fmt.Sprintf("pos=%d, value=%d", args.Pos, *reply))
+	s.LogSuccess("Get", args.Name, fmt.Sprintf("pos=%d, value=%d\n", args.Pos, *reply))
 	return nil
 }
 
@@ -105,7 +105,7 @@ func (s *RemoteListsService) Remove(args RemoveArgs,reply *int) error{
 		*reply = 0
 		return fmt.Errorf("failed to remove from list '%s': %w", args.Name, err)
 	}
-	s.LogSuccess("Remove", args.Name, fmt.Sprintf("removed_value=%d", *reply))
+	s.LogSuccess("Remove", args.Name, fmt.Sprintf("removed_value=%d\n", *reply))
 	return nil
 }
 
@@ -119,7 +119,7 @@ func (s *RemoteListsService) Size(args SizeArgs, reply *int) error {
 		*reply = 0
 		return fmt.Errorf("failed to get size of list '%s': %w", args.Name, err)
 	}
-	s.LogSuccess("Size", args.Name, fmt.Sprintf("size=%d", *reply))
+	s.LogSuccess("Size", args.Name, fmt.Sprintf("size=%d\n", *reply))
 	return nil
 }
 
@@ -133,7 +133,7 @@ func (s *RemoteListsService) ListExists(args ListExistsArgs, reply *bool) error 
 		*reply = false
 		return fmt.Errorf("failed to check if list '%s' exists: %w", args.Name, err)
 	}
-	s.LogSuccess("ListExists", args.Name, fmt.Sprintf("exists=%t", *reply))
+	s.LogSuccess("ListExists", args.Name, fmt.Sprintf("exists=%t\n", *reply))
     return nil
 }
 
@@ -147,7 +147,7 @@ func (s *RemoteListsService) GetListsNames(args GetListsNamesArgs, reply *[]stri
 		*reply = []string{}
 		return fmt.Errorf("failed to get list names: %w", err)
 	}
-	log.Printf("[SUCCESS] GetListsNames returned %d lists", len(*reply))
+	log.Printf("[SUCCESS] GetListsNames returned %d lists\n", len(*reply))
 	return nil
 }
 
@@ -175,6 +175,7 @@ func startServer(port string) error{
 	fmt.Println(" - RemoteListService.Remove")
 	fmt.Println(" - RemoteListService.Size")
 	fmt.Println(" - RemoteListService.ListExists")
+	fmt.Println("")
 
 	return http.Serve(listener, nil)
 }

@@ -118,7 +118,7 @@ func (c *RPCClient) GetListsNames() error {
 		return err
 	}
 	
-	fmt.Println("✅ Available lists:")
+	fmt.Println(" Available lists:")
 	if len(reply) == 0 {
 		fmt.Println("  (no lists found)")
 	} else {
@@ -131,7 +131,7 @@ func (c *RPCClient) GetListsNames() error {
 
 // Interface
 func printHelp() {
-	fmt.Println("\n📋 Available commands:")
+	fmt.Println("\n Available commands:")
 	fmt.Println("  append <list_name> <value>     - Add value to list")
 	fmt.Println("  get <list_name> <position>     - Get value at position")
 	fmt.Println("  remove <list_name>             - Remove last value")
@@ -163,7 +163,7 @@ func main(){
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Print("rpc> ")
+		fmt.Print("\nrpc> ")
 		if !scanner.Scan() {
 			break
 		}
