@@ -1,7 +1,5 @@
 package main
 
-// import remotelist "project-RPA/PKG"
-
 import (
 	"fmt"
 	"log"
@@ -33,6 +31,10 @@ type SizeArgs struct{
 	Name string
 }
 
+type ListExistsArgs struct {
+    Name string
+}
+
 type RemoteListsService struct{
 	lists *remotelist.RemoteLists
 }
@@ -56,20 +58,25 @@ func (s *RemoteListsService) Get(args GetArgs, reply *int) error{
 }
 
 func (s *RemoteListsService) Remove(args RemoveArgs,reply *int) error{
-	fmt.Printf("[List] Remove: name=%s", args.Name)
+	fmt.Printf("[List] Remove: name=%s\n", args.Name)
 	return s.lists.Remove(args.Name, reply)
 }
 
 func (s *RemoteListsService) Size(args SizeArgs, reply *int) error {
-	fmt.Printf("[List] Size: name=%s",args.Name)
+	fmt.Printf("[List] Size: name=%s\n",args.Name)
 	return s.lists.Size(args.Name, reply)
+}
+
+func (s *RemoteListsService) ListExists(args ListExistsArgs, reply *bool) error {
+    fmt.Printf("[List] ListExists: name=%s\n", args.Name)
+    return s.lists.ListExists(args.Name, reply)
 }
 
 // metodos do server
 
 var (
     serverStartTime = time.Now()
-    totalRequests   = 0
+    totalRequests int = 0
 )
 
 type StatsService struct {

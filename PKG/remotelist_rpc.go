@@ -115,6 +115,9 @@ func (rl *RemoteLists) ListExists(name string,reply *bool) error{
 	return nil
 }
 
+func (rl *RemoteLists) GetListsNames() error {
+	return nil
+}
 
 
 
