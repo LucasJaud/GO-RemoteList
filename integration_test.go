@@ -19,7 +19,7 @@ type SizeArgs struct {
 }
 
 func startServer(t *testing.T) {
-	cmd := exec.Command("go", "run", "server/server,go")
+	cmd := exec.Command("go", "run", "server/server.go")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
