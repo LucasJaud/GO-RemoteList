@@ -42,6 +42,10 @@ type RemoteListsService struct{
 
 type GetListsNamesArgs struct{}
 
+type GetAllArgs struct{
+	Name string
+}
+
 var (
 	serverStartTime = time.Now()
 	totalRequests   int64 = 0
@@ -154,6 +158,20 @@ func (s *RemoteListsService) GetListsNames(args GetListsNamesArgs, reply *[]stri
 		return fmt.Errorf("failed to get list names: %w", err)
 	}
 	log.Printf("[SUCCESS] GetListsNames returned %d lists\n", len(*reply))
+	return nil
+}
+
+func (s *RemoteListsService) GetAll(args GetAllArgs, reply *[]int) error{
+	s.incrementRequests()
+	fmt.Println("[List] GetAll")
+	
+	err:= s.lists.GetAll(args.Name, reply)
+	if err!= nil {
+		s.LogError("GetAll", args.Name, err)
+		*reply = nil
+		return fmt.Errorf("failed to get elements from list %s : %w",args.Name, err)
+	}
+	s.LogSuccess("GetALl", args.Name, fmt.Sprintf("retrieved %d items\n", len(*reply)))
 	return nil
 }
 

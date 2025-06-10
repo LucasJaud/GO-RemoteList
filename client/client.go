@@ -33,6 +33,10 @@ type ListExistsArgs struct {
 	Name string
 }
 
+type GetAllArgs struct{
+	Name string
+}
+
 type GetListsNamesArgs struct{}
 
 type RPCClient struct {
@@ -129,6 +133,22 @@ func (c *RPCClient) GetListsNames() error {
 	return nil
 }
 
+func (c *RPCClient) GetAll(name string) error{
+	var reply []int
+
+	err := c.client.Call("RemoteListsService.GetAll", GetAllArgs{Name: name}, &reply)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Elements of list:")
+	if len(reply) == 0 {
+		fmt.Println(" list is empty")
+	} else {
+		fmt.Printf("List '%s' contents: %v\n", name, reply)
+	}
+	return nil
+}
+
 // Interface
 func printHelp() {
 	fmt.Println("\n Available commands:")
@@ -138,6 +158,7 @@ func printHelp() {
 	fmt.Println("  size <list_name>               - Get list size")
 	fmt.Println("  exists <list_name>             - Check if list exists")
 	fmt.Println("  lists                          - Show all list names")
+	fmt.Println("  elements <list_name>           - Show elements from list")
 	fmt.Println("  help                           - Show this help")
 	fmt.Println("  quit                           - Exit client")
 	fmt.Println()
@@ -241,6 +262,15 @@ func main(){
 			
 			case "lists":
 				if err := client.GetListsNames(); err != nil {
+					fmt.Printf(" Error: %v\n", err)
+				}
+			
+			case "elements":
+				if len(parts) != 2 {
+					fmt.Println(" Usage: elements <list_name>")
+					continue
+				}
+				if err := client.GetAll(parts[1]); err != nil {
 					fmt.Printf(" Error: %v\n", err)
 				}
 			

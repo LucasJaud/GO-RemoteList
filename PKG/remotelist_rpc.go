@@ -148,6 +148,21 @@ func (rl *RemoteLists) GetListsNames(reply *[]string) error {
     return nil
 }
 
+func (rl *RemoteLists) GetAll(name string, reply *[]int) error{
+	rl.mu.RLock()
+    defer rl.mu.RUnlock()
+
+	list, ok := rl.lists[name]
+	if !ok{
+		return errors.New("list not found")
+	}
+
+	*reply = append((*reply)[:0], list.Data...)
+	return nil
+}
+
+// snapshot
+
 func (rl *RemoteLists) SaveToFile() error {
 	basePath := "data/snapshots"
 	rl.mu.RLock()
