@@ -150,6 +150,8 @@ func (rl *RemoteLists) GetListsNames(reply *[]string) error {
 
 func (rl *RemoteLists) SaveToFile() error {
 	basePath := "data/snapshots"
+	rl.mu.RLock()
+    defer rl.mu.RUnlock()
 
 	err := os.MkdirAll(basePath, os.ModePerm)
 	if err != nil {
