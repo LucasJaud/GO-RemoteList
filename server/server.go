@@ -48,9 +48,15 @@ var (
 )
 
 func NewRemoteListsService() *RemoteListsService {
-	return &RemoteListsService{
-		lists: remotelist.NewRemoteLists(),
+	lists := remotelist.NewRemoteLists()
+
+	if err := lists.LoadLatestSnapshot(); err == nil {
+		log.Println("[INFO] Loaded latest snapshot from previous session.")
+	} else {
+		log.Println("[INFO] No snapshot found. Starting fresh.")
 	}
+
+	return &RemoteListsService{lists: lists}
 }
 
 func (s *RemoteListsService) incrementRequests() {
@@ -152,8 +158,7 @@ func (s *RemoteListsService) GetListsNames(args GetListsNamesArgs, reply *[]stri
 }
 
 // metodos do server
-func startServer(port string) error{
-	service := NewRemoteListsService()
+func startServer(port string, service *RemoteListsService) error{
 
 	err := rpc.Register(service)
 	if err != nil {
@@ -180,7 +185,7 @@ func startServer(port string) error{
 	return http.Serve(listener, nil)
 }
 
-func SetupServerShutdown(){
+func SetupServerShutdown(service *RemoteListsService){
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
@@ -189,6 +194,9 @@ func SetupServerShutdown(){
 		fmt.Println("interrupt signal received")
 		fmt.Printf("Total request of Server : %d\n", totalRequests)
 		fmt.Printf("Time running: %s=\n",time.Since(serverStartTime))
+
+		service.lists.BeforeShutdown()
+
 		fmt.Printf("terminating server...",)
 		os.Exit(0)
 	}()
@@ -200,8 +208,8 @@ func main(){
 	if p :=os.Getenv("RPC_PORT"); p !="" {
 		port = p
 	}
+	service := NewRemoteListsService()
+	SetupServerShutdown(service)
 
-	SetupServerShutdown()
-
-	log.Fatal(startServer(port))
+	log.Fatal(startServer(port, service))
 }
