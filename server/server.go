@@ -175,6 +175,19 @@ func (s *RemoteListsService) GetAll(args GetAllArgs, reply *[]int) error{
 	return nil
 }
 
+func SetupPeriodicTask(service *RemoteListsService) {
+    ticker := time.NewTicker(1 * time.Minute)
+    go func() {
+		for range ticker.C {
+			service.PeriodicTask()
+		}
+    }()
+}
+
+func (service *RemoteListsService) PeriodicTask() {
+service.lists.PeriodicSave()
+}
+
 // metodos do server
 func startServer(port string, service *RemoteListsService) error{
 
@@ -212,9 +225,6 @@ func SetupServerShutdown(service *RemoteListsService){
 		fmt.Println("interrupt signal received")
 		fmt.Printf("Total request of Server : %d\n", totalRequests)
 		fmt.Printf("Time running: %s=\n",time.Since(serverStartTime))
-
-		service.lists.BeforeShutdown()
-
 		fmt.Printf("terminating server...",)
 		os.Exit(0)
 	}()
