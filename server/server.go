@@ -54,11 +54,11 @@ var (
 func NewRemoteListsService() *RemoteListsService {
 	lists := remotelist.NewRemoteLists()
 
-	if err := lists.LoadLatestSnapshot(); err == nil {
-		log.Println("[INFO] Loaded latest snapshot from previous session.")
-	} else {
-		log.Println("[INFO] No snapshot found. Starting fresh.")
-	}
+	// if err := lists.LoadLatestSnapshot(); err == nil {
+	// 	log.Println("[INFO] Loaded latest snapshot from previous session.")
+	// } else {
+	// 	log.Println("[INFO] No snapshot found. Starting fresh.")
+	// }
 
 	return &RemoteListsService{lists: lists}
 }
@@ -205,12 +205,6 @@ func startServer(port string, service *RemoteListsService) error{
 	fmt.Printf("initalized Server on port: %s\n",port)
 	fmt.Printf("Endpoint: http://localhost:%s\n",port)
 	fmt.Printf("Server init at %s\n",serverStartTime.Format("15:04:05"))
-	fmt.Println("List Methods:")
-	fmt.Println(" - RemoteListService.Append")
-	fmt.Println(" - RemoteListService.Get")
-	fmt.Println(" - RemoteListService.Remove")
-	fmt.Println(" - RemoteListService.Size")
-	fmt.Println(" - RemoteListService.ListExists")
 	fmt.Println("")
 
 	return http.Serve(listener, nil)
@@ -237,6 +231,7 @@ func main(){
 		port = p
 	}
 	service := NewRemoteListsService()
+	SetupPeriodicTask(service)
 	SetupServerShutdown(service)
 
 	log.Fatal(startServer(port, service))
