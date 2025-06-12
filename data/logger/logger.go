@@ -46,7 +46,7 @@ func (l *Logger) Save(service string, method string, params map[string]interface
 		return fmt.Errorf(" Error parsing file: %v", err)
 	}
 
-	_, err =file.Write(append(jsonData,'\n'))
+	_, err = file.Write(append(jsonData,'\n'))
 	if err != nil {
 		return fmt.Errorf(" Error writing file: %v", err)
 	}
