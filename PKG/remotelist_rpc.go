@@ -26,12 +26,14 @@ func NewRemoteLists() *RemoteLists {
 		logger: logger.NewLogger("data/log/app.log"),
 	}
 
+	//load snapshot when Created Instance of RemoteList 
 	if err := rl.LoadLatestSnapshot(); err != nil {
 		fmt.Printf("  Failed Loading Snapshot: %v\n", err)
 	} else {
 		fmt.Println(" Snapshot loaded sucessfully")
 	}
 
+	// load methods from log and aply them to RemoteList
 	if err := rl.LoadLogJournal(); err != nil {
 		fmt.Printf("  Failed Replaying Journal: %v\n", err)
 	} else {
