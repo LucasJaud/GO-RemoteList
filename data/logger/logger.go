@@ -51,7 +51,7 @@ func (l *Logger) Save(service string, method string, params map[string]interface
 		return fmt.Errorf(" Error writing file: %v", err)
 	}
 
-	return file.Sync()
+	return nil
 }
 
 func (l *Logger) Load() ([]LoggerData,error){
